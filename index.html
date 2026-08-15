@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>8-Bit Beat Maker</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: #111;
+        color: white;
+        font-family: monospace;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .app {
+        width: 90%;
+        max-width: 850px;
+        background: #1b1b1b;
+        border: 3px solid #444;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 30px rgba(0,0,0,.6);
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 0;
+        letter-spacing: 3px;
+    }
+
+    .controls {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 25px 0;
+        flex-wrap: wrap;
+    }
+
+    button {
+        font-family: monospace;
+        font-size: 16px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #333;
+        color: white;
+    }
+
+    button:hover {
+        background: #555;
+    }
+
+    .sequencer {
+        margin-top: 20px;
+    }
+
+    .row {
+        display: grid;
+        grid-template-columns: 100px repeat(8, 1fr);
+        gap: 8px;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+
+    .instrument {
+        font-size: 15px;
+    }
+
+    .step {
+        height: 45px;
+        background: #292929;
+        border: 2px solid #444;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .step.active {
+        background: #00d9ff;
+        border-color: white;
+        box-shadow: 0 0 12px #00d9ff;
+    }
+
+    .step.playing {
+        outline: 3px solid white;
+    }
+
+    .bpm {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    input {
+        width: 180px;
+    }
+
+    .piano {
+        margin-top: 40px;
+    }
+
+    .piano h2 {
+        text-align: center;
+    }
+
+    .keys {
+        display: flex;
+        justify-content: center;
+    }
+
+    .key {
+        width: 65px;
+        height: 150px;
+        background: white;
+        color: black;
+        border: 2px solid black;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 15px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .key:active {
+        background: #ddd;
+        transform: translateY(3px);
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 30px;
+        color: #777;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <h1>🎮 8-BIT BEAT MAKER</h1>
+
+    <div class="controls">
+        <button id="playButton">▶ PLAY</button>
+        <button id="clearButton">CLEAR</button>
+    </div>
+
+    <div class="bpm">
+        BPM:
+        <input type="range" id="bpm" min="60" max="180" value="120">
+        <span id="bpmValue">120</span>
+    </div>
+
+    <div class="sequencer">
+
+        <div class="row">
+            <div class="instrument">KICK</div>
+            <div class="step" data-instrument="kick" data-step="0"></div>
+            <div class="step" data-instrument="kick" data-step="1"></div>
+            <div class="step" data-instrument="kick" data-step="2"></div>
+            <div class="step" data-instrument="kick" data-step="3"></div>
+            <div class="step" data-instrument="kick" data-step="4"></div>
+            <div class="step" data-instrument="kick" data-step="5"></div>
+            <div class="step" data-instrument="kick" data-step="6"></div>
+            <div class="step" data-instrument="kick" data-step="7"></div>
+        </div>
+
+        <div class="row">
+            <div class="instrument">SNARE</div>
+            <div class="step" data-instrument="snare" data-step="0"></div>
+            <div class="step" data-instrument="snare" data-step="1"></div>
+            <div class="step" data-instrument="snare" data-step="2"></div>
+            <div class="step" data-instrument="snare" data-step="3"></div>
+            <div class="step" data-instrument="snare" data-step="4"></div>
+            <div class="step" data-instrument="snare" data-step="5"></div>
+            <div class="step" data-instrument="snare" data-step="6"></div>
+            <div class="step" data-instrument="snare" data-step="7"></div>
+        </div>
+
+        <div class="row">
+            <div class="instrument">HI-HAT</div>
+            <div class="step" data-instrument="hihat" data-step="0"></div>
+            <div class="step" data-instrument="hihat" data-step="1"></div>
+            <div class="step" data-instrument="hihat" data-step="2"></div>
+            <div class="step" data-instrument="hihat" data-step="3"></div>
+            <div class="step" data-instrument="hihat" data-step="4"></div>
+            <div class="step" data-instrument="hihat" data-step="5"></div>
+            <div class="step" data-instrument="hihat" data-step="6"></div>
+            <div class="step" data-instrument="hihat" data-step="7"></div>
+        </div>
+
+    </div>
+
+    <div class="piano">
+
+        <h2>🎹 MINI PIANO</h2>
+
+        <div class="keys">
+            <div class="key" data-note="261.63">C</div>
+            <div class="key" data-note="293.66">D</div>
+            <div class="key" data-note="329.63">E</div>
+            <div class="key" data-note="349.23">F</div>
+            <div class="key" data-note="392.00">G</div>
+            <div class="key" data-note="440.00">A</div>
+            <div class="key" data-note="493.88">B</div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        ✦ Make a tiny beat ✦
+    </div>
+
+</div>
+
+<script>
+
+let audioContext;
+let playing = false;
+let currentStep = 0;
+let timer;
+
+let pattern = {
+    kick: Array(8).fill(false),
+    snare: Array(8).fill(false),
+    hihat: Array(8).fill(false)
+};
+
+const steps = document.querySelectorAll(".step");
+const playButton = document.getElementById("playButton");
+const clearButton = document.getElementById("clearButton");
+const bpmSlider = document.getElementById("bpm");
+const bpmValue = document.getElementById("bpmValue");
+
+function getAudioContext() {
+    if (!audioContext) {
+        audioContext = new AudioContext();
+    }
+
+    if (audioContext.state === "suspended") {
+        audioContext.resume();
+    }
+
+    return audioContext;
+}
+
+function playTone(frequency, duration = 0.15) {
+
+    const ctx = getAudioContext();
+
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    oscillator.type = "square";
+    oscillator.frequency.value = frequency;
+
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        ctx.currentTime + duration
+    );
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+
+    oscillator.start();
+    oscillator.stop(ctx.currentTime + duration);
+}
+
+function kick() {
+    playTone(100, 0.15);
+}
+
+function snare() {
+    playTone(180, 0.08);
+}
+
+function hihat() {
+    playTone(700, 0.04);
+}
+
+steps.forEach(step => {
+
+    step.addEventListener("click", () => {
+
+        const instrument = step.dataset.instrument;
+        const index = Number(step.dataset.step);
+
+        pattern[instrument][index] =
+            !pattern[instrument][index];
+
+        step.classList.toggle("active");
+
+        // Preview the sound
+        if (pattern[instrument][index]) {
+
+            if (instrument === "kick") kick();
+            if (instrument === "snare") snare();
+            if (instrument === "hihat") hihat();
+
+        }
+
+    });
+
+});
+
+function playStep() {
+
+    steps.forEach(step => {
+        step.classList.remove("playing");
+    });
+
+    document
+        .querySelectorAll(`[data-step="${currentStep}"]`)
+        .forEach(step => {
+            step.classList.add("playing");
+        });
+
+    if (pattern.kick[currentStep]) kick();
+    if (pattern.snare[currentStep]) snare();
+    if (pattern.hihat[currentStep]) hihat();
+
+    currentStep++;
+
+    if (currentStep >= 8) {
+        currentStep = 0;
+    }
+}
+
+function startSequencer() {
+
+    const bpm = Number(bpmSlider.value);
+
+    const interval = (60 / bpm) * 500;
+
+    timer = setInterval(playStep, interval);
+}
+
+playButton.addEventListener("click", () => {
+
+    getAudioContext();
+
+    if (!playing) {
+
+        playing = true;
+        currentStep = 0;
+
+        playButton.textContent = "■ STOP";
+
+        startSequencer();
+
+    } else {
+
+        playing = false;
+
+        clearInterval(timer);
+
+        playButton.textContent = "▶ PLAY";
+
+        steps.forEach(step => {
+            step.classList.remove("playing");
+        });
+
+    }
+
+});
+
+clearButton.addEventListener("click", () => {
+
+    pattern = {
+        kick: Array(8).fill(false),
+        snare: Array(8).fill(false),
+        hihat: Array(8).fill(false)
+    };
+
+    steps.forEach(step => {
+        step.classList.remove("active");
+    });
+
+});
+
+bpmSlider.addEventListener("input", () => {
+    bpmValue.textContent = bpmSlider.value;
+});
+
+document.querySelectorAll(".key").forEach(key => {
+
+    key.addEventListener("click", () => {
+
+        const frequency = Number(key.dataset.note);
+
+        playTone(frequency, 0.3);
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
