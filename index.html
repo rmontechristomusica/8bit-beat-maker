@@ -1,147 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>8-Bit Beat Maker</title>
+    <title>8-Bit Beat Maker V2</title>
 
-<style>
-    * {
-        box-sizing: border-box;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    body {
-        margin: 0;
-        min-height: 100vh;
-        background: #111;
-        color: white;
-        font-family: monospace;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #111;
+            color: white;
+            font-family: monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-    .app {
-        width: 90%;
-        max-width: 850px;
-        background: #1b1b1b;
-        border: 3px solid #444;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 0 30px rgba(0,0,0,.6);
-    }
+        .app {
+            width: 100%;
+            max-width: 850px;
+            background: #1b1b1b;
+            border: 3px solid #444;
+            border-radius: 15px;
+            padding: 25px;
+        }
 
-    h1 {
-        text-align: center;
-        margin-top: 0;
-        letter-spacing: 3px;
-    }
+        h1 {
+            text-align: center;
+            color: #00e5ff;
+            letter-spacing: 3px;
+            margin-top: 0;
+        }
 
-    .controls {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin: 25px 0;
-        flex-wrap: wrap;
-    }
+        .controls {
+            text-align: center;
+            margin: 25px 0;
+        }
 
-    button {
-        font-family: monospace;
-        font-size: 16px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        background: #333;
-        color: white;
-    }
+        button {
+            background: #00e5ff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-family: monospace;
+            font-size: 18px;
+            cursor: pointer;
+        }
 
-    button:hover {
-        background: #555;
-    }
+        button:hover {
+            transform: scale(1.05);
+        }
 
-    .sequencer {
-        margin-top: 20px;
-    }
+        .bpm {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-    .row {
-        display: grid;
-        grid-template-columns: 100px repeat(8, 1fr);
-        gap: 8px;
-        margin-bottom: 10px;
-        align-items: center;
-    }
+        input {
+            width: 180px;
+        }
 
-    .instrument {
-        font-size: 15px;
-    }
+        .sequencer {
+            width: 100%;
+        }
 
-    .step {
-        height: 45px;
-        background: #292929;
-        border: 2px solid #444;
-        border-radius: 6px;
-        cursor: pointer;
-    }
+        .row {
+            display: grid;
+            grid-template-columns: 100px repeat(8, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
 
-    .step.active {
-        background: #00d9ff;
-        border-color: white;
-        box-shadow: 0 0 12px #00d9ff;
-    }
+        .name {
+            font-size: 14px;
+            text-align: right;
+            padding-right: 5px;
+        }
 
-    .step.playing {
-        outline: 3px solid white;
-    }
+        .cube {
+            height: 50px;
+            background: #292929;
+            border: 2px solid #444;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.08s;
+        }
 
-    .bpm {
-        text-align: center;
-        margin-top: 20px;
-    }
+        .cube.active {
+            background: #00e5ff;
+            border-color: white;
+            box-shadow: 0 0 12px #00e5ff;
+        }
 
-    input {
-        width: 180px;
-    }
+        .cube.playing {
+            outline: 3px solid white;
+            transform: scale(1.08);
+        }
 
-    .piano {
-        margin-top: 40px;
-    }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+        }
 
-    .piano h2 {
-        text-align: center;
-    }
+        @media (max-width: 600px) {
 
-    .keys {
-        display: flex;
-        justify-content: center;
-    }
+            body {
+                padding: 10px;
+            }
 
-    .key {
-        width: 65px;
-        height: 150px;
-        background: white;
-        color: black;
-        border: 2px solid black;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        padding-bottom: 15px;
-        cursor: pointer;
-        user-select: none;
-    }
+            .app {
+                padding: 15px;
+            }
 
-    .key:active {
-        background: #ddd;
-        transform: translateY(3px);
-    }
+            h1 {
+                font-size: 20px;
+            }
 
-    .footer {
-        text-align: center;
-        margin-top: 30px;
-        color: #777;
-    }
-</style>
+            .row {
+                grid-template-columns: 70px repeat(8, 1fr);
+                gap: 5px;
+            }
+
+            .cube {
+                height: 42px;
+            }
+
+            .name {
+                font-size: 11px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -152,161 +149,288 @@
 
     <div class="controls">
         <button id="playButton">▶ PLAY</button>
-        <button id="clearButton">CLEAR</button>
     </div>
 
     <div class="bpm">
         BPM:
-        <input type="range" id="bpm" min="60" max="180" value="120">
+        <input
+            type="range"
+            id="bpm"
+            min="60"
+            max="180"
+            value="120"
+        >
+
         <span id="bpmValue">120</span>
     </div>
 
     <div class="sequencer">
 
-        <div class="row">
-            <div class="instrument">KICK</div>
-            <div class="step" data-instrument="kick" data-step="0"></div>
-            <div class="step" data-instrument="kick" data-step="1"></div>
-            <div class="step" data-instrument="kick" data-step="2"></div>
-            <div class="step" data-instrument="kick" data-step="3"></div>
-            <div class="step" data-instrument="kick" data-step="4"></div>
-            <div class="step" data-instrument="kick" data-step="5"></div>
-            <div class="step" data-instrument="kick" data-step="6"></div>
-            <div class="step" data-instrument="kick" data-step="7"></div>
-        </div>
+        <!-- KICK -->
 
         <div class="row">
-            <div class="instrument">SNARE</div>
-            <div class="step" data-instrument="snare" data-step="0"></div>
-            <div class="step" data-instrument="snare" data-step="1"></div>
-            <div class="step" data-instrument="snare" data-step="2"></div>
-            <div class="step" data-instrument="snare" data-step="3"></div>
-            <div class="step" data-instrument="snare" data-step="4"></div>
-            <div class="step" data-instrument="snare" data-step="5"></div>
-            <div class="step" data-instrument="snare" data-step="6"></div>
-            <div class="step" data-instrument="snare" data-step="7"></div>
+
+            <div class="name">KICK</div>
+
+            <div class="cube" data-instrument="kick" data-step="0"></div>
+            <div class="cube" data-instrument="kick" data-step="1"></div>
+            <div class="cube" data-instrument="kick" data-step="2"></div>
+            <div class="cube" data-instrument="kick" data-step="3"></div>
+            <div class="cube" data-instrument="kick" data-step="4"></div>
+            <div class="cube" data-instrument="kick" data-step="5"></div>
+            <div class="cube" data-instrument="kick" data-step="6"></div>
+            <div class="cube" data-instrument="kick" data-step="7"></div>
+
         </div>
+
+        <!-- SNARE -->
 
         <div class="row">
-            <div class="instrument">HI-HAT</div>
-            <div class="step" data-instrument="hihat" data-step="0"></div>
-            <div class="step" data-instrument="hihat" data-step="1"></div>
-            <div class="step" data-instrument="hihat" data-step="2"></div>
-            <div class="step" data-instrument="hihat" data-step="3"></div>
-            <div class="step" data-instrument="hihat" data-step="4"></div>
-            <div class="step" data-instrument="hihat" data-step="5"></div>
-            <div class="step" data-instrument="hihat" data-step="6"></div>
-            <div class="step" data-instrument="hihat" data-step="7"></div>
+
+            <div class="name">SNARE</div>
+
+            <div class="cube" data-instrument="snare" data-step="0"></div>
+            <div class="cube" data-instrument="snare" data-step="1"></div>
+            <div class="cube" data-instrument="snare" data-step="2"></div>
+            <div class="cube" data-instrument="snare" data-step="3"></div>
+            <div class="cube" data-instrument="snare" data-step="4"></div>
+            <div class="cube" data-instrument="snare" data-step="5"></div>
+            <div class="cube" data-instrument="snare" data-step="6"></div>
+            <div class="cube" data-instrument="snare" data-step="7"></div>
+
         </div>
 
-    </div>
+        <!-- HI HAT -->
 
-    <div class="piano">
+        <div class="row">
 
-        <h2>🎹 MINI PIANO</h2>
+            <div class="name">HI-HAT</div>
 
-        <div class="keys">
-            <div class="key" data-note="261.63">C</div>
-            <div class="key" data-note="293.66">D</div>
-            <div class="key" data-note="329.63">E</div>
-            <div class="key" data-note="349.23">F</div>
-            <div class="key" data-note="392.00">G</div>
-            <div class="key" data-note="440.00">A</div>
-            <div class="key" data-note="493.88">B</div>
+            <div class="cube" data-instrument="hihat" data-step="0"></div>
+            <div class="cube" data-instrument="hihat" data-step="1"></div>
+            <div class="cube" data-instrument="hihat" data-step="2"></div>
+            <div class="cube" data-instrument="hihat" data-step="3"></div>
+            <div class="cube" data-instrument="hihat" data-step="4"></div>
+            <div class="cube" data-instrument="hihat" data-step="5"></div>
+            <div class="cube" data-instrument="hihat" data-step="6"></div>
+            <div class="cube" data-instrument="hihat" data-step="7"></div>
+
         </div>
 
     </div>
 
     <div class="footer">
-        ✦ Make a tiny beat ✦
+        ✦ MAKE A TINY BEAT ✦
     </div>
 
 </div>
 
+
 <script>
 
 let audioContext;
-let playing = false;
-let currentStep = 0;
-let timer;
 
-let pattern = {
+let playing = false;
+
+let currentStep = 0;
+
+let timer = null;
+
+
+const pattern = {
+
     kick: Array(8).fill(false),
+
     snare: Array(8).fill(false),
+
     hihat: Array(8).fill(false)
+
 };
 
-const steps = document.querySelectorAll(".step");
+
+const cubes = document.querySelectorAll(".cube");
+
 const playButton = document.getElementById("playButton");
-const clearButton = document.getElementById("clearButton");
+
 const bpmSlider = document.getElementById("bpm");
+
 const bpmValue = document.getElementById("bpmValue");
 
-function getAudioContext() {
+
+/* AUDIO */
+
+function getAudio() {
+
     if (!audioContext) {
+
         audioContext = new AudioContext();
+
     }
 
     if (audioContext.state === "suspended") {
+
         audioContext.resume();
+
     }
 
     return audioContext;
+
 }
 
-function playTone(frequency, duration = 0.15) {
 
-    const ctx = getAudioContext();
+/* KICK */
+
+function kick() {
+
+    const ctx = getAudio();
 
     const oscillator = ctx.createOscillator();
+
     const gain = ctx.createGain();
 
     oscillator.type = "square";
-    oscillator.frequency.value = frequency;
 
-    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    oscillator.frequency.setValueAtTime(
+        140,
+        ctx.currentTime
+    );
+
+    oscillator.frequency.exponentialRampToValueAtTime(
+        50,
+        ctx.currentTime + 0.12
+    );
+
+    gain.gain.setValueAtTime(
+        0.5,
+        ctx.currentTime
+    );
+
     gain.gain.exponentialRampToValueAtTime(
-        0.001,
-        ctx.currentTime + duration
+        0.01,
+        ctx.currentTime + 0.15
     );
 
     oscillator.connect(gain);
+
     gain.connect(ctx.destination);
 
     oscillator.start();
-    oscillator.stop(ctx.currentTime + duration);
+
+    oscillator.stop(
+        ctx.currentTime + 0.15
+    );
+
 }
 
-function kick() {
-    playTone(100, 0.15);
-}
+
+/* SNARE */
 
 function snare() {
-    playTone(180, 0.08);
+
+    const ctx = getAudio();
+
+    const oscillator = ctx.createOscillator();
+
+    const gain = ctx.createGain();
+
+    oscillator.type = "square";
+
+    oscillator.frequency.value = 180;
+
+    gain.gain.setValueAtTime(
+        0.3,
+        ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.01,
+        ctx.currentTime + 0.1
+    );
+
+    oscillator.connect(gain);
+
+    gain.connect(ctx.destination);
+
+    oscillator.start();
+
+    oscillator.stop(
+        ctx.currentTime + 0.1
+    );
+
 }
+
+
+/* HI HAT */
 
 function hihat() {
-    playTone(700, 0.04);
+
+    const ctx = getAudio();
+
+    const oscillator = ctx.createOscillator();
+
+    const gain = ctx.createGain();
+
+    oscillator.type = "square";
+
+    oscillator.frequency.value = 700;
+
+    gain.gain.setValueAtTime(
+        0.15,
+        ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.01,
+        ctx.currentTime + 0.04
+    );
+
+    oscillator.connect(gain);
+
+    gain.connect(ctx.destination);
+
+    oscillator.start();
+
+    oscillator.stop(
+        ctx.currentTime + 0.04
+    );
+
 }
 
-steps.forEach(step => {
 
-    step.addEventListener("click", () => {
+/* CUBE CLICKING */
 
-        const instrument = step.dataset.instrument;
-        const index = Number(step.dataset.step);
+cubes.forEach(cube => {
 
-        pattern[instrument][index] =
-            !pattern[instrument][index];
+    cube.addEventListener("click", () => {
 
-        step.classList.toggle("active");
+        const instrument =
+            cube.dataset.instrument;
 
-        // Preview the sound
-        if (pattern[instrument][index]) {
+        const step =
+            Number(cube.dataset.step);
 
-            if (instrument === "kick") kick();
-            if (instrument === "snare") snare();
-            if (instrument === "hihat") hihat();
+        pattern[instrument][step] =
+            !pattern[instrument][step];
+
+        cube.classList.toggle(
+            "active"
+        );
+
+        if (
+            pattern[instrument][step]
+        ) {
+
+            if (instrument === "kick") {
+                kick();
+            }
+
+            if (instrument === "snare") {
+                snare();
+            }
+
+            if (instrument === "hihat") {
+                hihat();
+            }
 
         }
 
@@ -314,96 +438,150 @@ steps.forEach(step => {
 
 });
 
+
+/* PLAY ONE STEP */
+
 function playStep() {
 
-    steps.forEach(step => {
-        step.classList.remove("playing");
+    cubes.forEach(cube => {
+
+        cube.classList.remove(
+            "playing"
+        );
+
     });
 
+
     document
-        .querySelectorAll(`[data-step="${currentStep}"]`)
-        .forEach(step => {
-            step.classList.add("playing");
+        .querySelectorAll(
+            `[data-step="${currentStep}"]`
+        )
+        .forEach(cube => {
+
+            cube.classList.add(
+                "playing"
+            );
+
         });
 
-    if (pattern.kick[currentStep]) kick();
-    if (pattern.snare[currentStep]) snare();
-    if (pattern.hihat[currentStep]) hihat();
+
+    if (
+        pattern.kick[currentStep]
+    ) {
+        kick();
+    }
+
+
+    if (
+        pattern.snare[currentStep]
+    ) {
+        snare();
+    }
+
+
+    if (
+        pattern.hihat[currentStep]
+    ) {
+        hihat();
+    }
+
 
     currentStep++;
 
     if (currentStep >= 8) {
+
         currentStep = 0;
+
     }
+
 }
+
+
+/* START */
 
 function startSequencer() {
 
-    const bpm = Number(bpmSlider.value);
+    const bpm =
+        Number(bpmSlider.value);
 
-    const interval = (60 / bpm) * 500;
+    const interval =
+        (60 / bpm) * 500;
 
-    timer = setInterval(playStep, interval);
+    playStep();
+
+    timer = setInterval(
+        playStep,
+        interval
+    );
+
 }
 
-playButton.addEventListener("click", () => {
 
-    getAudioContext();
+/* PLAY BUTTON */
 
-    if (!playing) {
+playButton.addEventListener(
+    "click",
+    () => {
 
-        playing = true;
-        currentStep = 0;
+        getAudio();
 
-        playButton.textContent = "■ STOP";
+        if (!playing) {
 
-        startSequencer();
+            playing = true;
 
-    } else {
+            currentStep = 0;
 
-        playing = false;
+            playButton.textContent =
+                "■ STOP";
 
-        clearInterval(timer);
+            startSequencer();
 
-        playButton.textContent = "▶ PLAY";
+        }
 
-        steps.forEach(step => {
-            step.classList.remove("playing");
-        });
+        else {
+
+            playing = false;
+
+            clearInterval(timer);
+
+            timer = null;
+
+            playButton.textContent =
+                "▶ PLAY";
+
+            cubes.forEach(cube => {
+
+                cube.classList.remove(
+                    "playing"
+                );
+
+            });
+
+        }
 
     }
+);
 
-});
 
-clearButton.addEventListener("click", () => {
+/* BPM */
 
-    pattern = {
-        kick: Array(8).fill(false),
-        snare: Array(8).fill(false),
-        hihat: Array(8).fill(false)
-    };
+bpmSlider.addEventListener(
+    "input",
+    () => {
 
-    steps.forEach(step => {
-        step.classList.remove("active");
-    });
+        bpmValue.textContent =
+            bpmSlider.value;
 
-});
+        if (playing) {
 
-bpmSlider.addEventListener("input", () => {
-    bpmValue.textContent = bpmSlider.value;
-});
+            clearInterval(timer);
 
-document.querySelectorAll(".key").forEach(key => {
+            startSequencer();
 
-    key.addEventListener("click", () => {
+        }
 
-        const frequency = Number(key.dataset.note);
-
-        playTone(frequency, 0.3);
-
-    });
-
-});
+    }
+);
 
 </script>
 
