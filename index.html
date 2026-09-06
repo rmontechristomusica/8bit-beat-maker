@@ -726,7 +726,65 @@ bpmSlider.addEventListener(
 
     }
 );
+/* COMPUTER KEYBOARD PIANO */
 
+const keyboardNotes = {
+    "a": 261.63,
+    "s": 293.66,
+    "d": 329.63,
+    "f": 349.23,
+    "g": 392.00,
+    "h": 440.00,
+    "j": 493.88,
+    "k": 523.25
+};
+
+
+/* PREVENT HOLDING A KEY FROM REPEATING */
+
+const heldKeys = new Set();
+
+
+document.addEventListener("keydown", event => {
+
+    const keyPressed = event.key.toLowerCase();
+
+    if (!keyboardNotes[keyPressed]) return;
+
+    if (heldKeys.has(keyPressed)) return;
+
+    heldKeys.add(keyPressed);
+
+    playNote(keyboardNotes[keyPressed]);
+
+    const pianoKey = document.querySelector(
+        `.key[data-note="${keyboardNotes[keyPressed]}"]`
+    );
+
+    if (pianoKey) {
+        pianoKey.classList.add("pressed");
+    }
+
+});
+
+
+document.addEventListener("keyup", event => {
+
+    const keyPressed = event.key.toLowerCase();
+
+    if (!keyboardNotes[keyPressed]) return;
+
+    heldKeys.delete(keyPressed);
+
+    const pianoKey = document.querySelector(
+        `.key[data-note="${keyboardNotes[keyPressed]}"]`
+    );
+
+    if (pianoKey) {
+        pianoKey.classList.remove("pressed");
+    }
+
+});
 </script>
 
 </body>
