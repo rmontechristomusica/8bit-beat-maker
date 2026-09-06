@@ -1,254 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>8-Bit Beat Maker V3</title>
+<title>8-Bit Beat Maker V4</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: #111;
-            color: white;
-            font-family: monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #111;
+    color: white;
+    font-family: monospace;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
 
-        .app {
-            width: 100%;
-            max-width: 850px;
-            background: #1b1b1b;
-            border: 3px solid #444;
-            border-radius: 15px;
-            padding: 25px;
-        }
+.app {
+    width: 100%;
+    max-width: 850px;
+    background: #1b1b1b;
+    border: 3px solid #444;
+    border-radius: 15px;
+    padding: 25px;
+}
 
-        h1 {
-            text-align: center;
-            color: #00e5ff;
-            letter-spacing: 3px;
-            margin-top: 0;
-        }
+h1 {
+    text-align: center;
+    color: #00e5ff;
+    letter-spacing: 3px;
+}
 
-        h2 {
-            text-align: center;
-            color: #ffcc00;
-            margin-top: 35px;
-        }
+h2 {
+    text-align: center;
+    color: #ffcc00;
+    margin-top: 35px;
+}
 
-        .controls {
-            text-align: center;
-            margin: 25px 0;
-        }
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 25px 0;
+}
 
-        button {
-            background: #00e5ff;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 25px;
-            font-family: monospace;
-            font-size: 18px;
-            cursor: pointer;
-        }
+button {
+    background: #00e5ff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-family: monospace;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        .bpm {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+button:hover {
+    transform: scale(1.05);
+}
 
-        input {
-            width: 180px;
-        }
+.bpm {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-        .sequencer {
-            width: 100%;
-        }
+input {
+    width: 180px;
+}
 
-        .row {
-            display: grid;
-            grid-template-columns: 100px repeat(8, 1fr);
-            gap: 8px;
-            margin-bottom: 10px;
-            align-items: center;
-        }
+.row {
+    display: grid;
+    grid-template-columns: 100px repeat(8, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
+    align-items: center;
+}
 
-        .name {
-            font-size: 14px;
-            text-align: right;
-            padding-right: 5px;
-        }
+.name {
+    font-size: 14px;
+    text-align: right;
+    padding-right: 5px;
+}
 
-        .cube {
-            height: 50px;
-            background: #292929;
-            border: 2px solid #444;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+.cube {
+    height: 50px;
+    background: #292929;
+    border: 2px solid #444;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-        .cube.active {
-            background: #00e5ff;
-            border-color: white;
-            box-shadow: 0 0 12px #00e5ff;
-        }
+.cube.active {
+    background: #00e5ff;
+    border-color: white;
+    box-shadow: 0 0 12px #00e5ff;
+}
 
-        .cube.playing {
-            outline: 3px solid white;
-            transform: scale(1.08);
-        }
+.cube.playing {
+    outline: 3px solid white;
+    transform: scale(1.08);
+}
 
-        .piano {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 4px;
-            flex-wrap: wrap;
-        }
+/* PIANO */
 
-        .key {
-            width: 75px;
-            height: 180px;
-            background: white;
-            color: black;
-            border: 3px solid #222;
-            border-radius: 0 0 8px 8px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding-bottom: 15px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.piano {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
 
-        .key.pressed {
-            background: #00e5ff;
-            transform: translateY(5px);
-            box-shadow: 0 0 15px #00e5ff;
-        }
+.key {
+    width: 75px;
+    height: 180px;
+    background: white;
+    color: black;
+    border: 3px solid #222;
+    border-radius: 0 0 8px 8px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    text-align: center;
+    padding-bottom: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: pre-line;
+}
 
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #777;
-        }
+.key.pressed {
+    background: #00e5ff;
+    transform: translateY(5px);
+    box-shadow: 0 0 15px #00e5ff;
+}
 
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
+.footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #777;
+}
 
-            .app {
-                padding: 15px;
-            }
+@media (max-width: 600px) {
 
-            h1 {
-                font-size: 20px;
-            }
+    .app {
+        padding: 12px;
+    }
 
-            .row {
-                grid-template-columns: 70px repeat(8, 1fr);
-                gap: 5px;
-            }
+    .row {
+        grid-template-columns: 60px repeat(8, 1fr);
+        gap: 4px;
+    }
 
-            .cube {
-                height: 42px;
-            }
+    .cube {
+        height: 42px;
+    }
 
-            .name {
-                font-size: 11px;
-            }
+    .name {
+        font-size: 10px;
+    }
 
-            .key {
-                width: 38px;
-                height: 130px;
-                font-size: 12px;
-            }
-        }
-    </style>
+    .key {
+        width: 38px;
+        height: 130px;
+        font-size: 11px;
+    }
+
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-    <h1>🎮 8-BIT BEAT MAKER</h1>
+<h1>🎮 8-BIT BEAT MAKER V4</h1>
 
-    <div class="controls">
-        <button id="playButton">▶ PLAY</button>
-    </div>
+<div class="controls">
+    <button id="playButton">▶ PLAY</button>
+    <button id="saveButton">💾 SAVE</button>
+    <button id="loadButton">📂 LOAD</button>
+    <button id="clearButton">🗑️ CLEAR</button>
+</div>
 
-    <div class="bpm">
-        BPM:
-        <input type="range" id="bpm" min="60" max="180" value="120">
-        <span id="bpmValue">120</span>
-    </div>
+<div class="bpm">
+    BPM:
+    <input type="range" id="bpm" min="60" max="180" value="120">
+    <span id="bpmValue">120</span>
+</div>
 
-    <div class="sequencer">
+<div class="sequencer">
 
-        <div class="row">
-            <div class="name">KICK</div>
-            <div class="cube" data-instrument="kick" data-step="0"></div>
-            <div class="cube" data-instrument="kick" data-step="1"></div>
-            <div class="cube" data-instrument="kick" data-step="2"></div>
-            <div class="cube" data-instrument="kick" data-step="3"></div>
-            <div class="cube" data-instrument="kick" data-step="4"></div>
-            <div class="cube" data-instrument="kick" data-step="5"></div>
-            <div class="cube" data-instrument="kick" data-step="6"></div>
-            <div class="cube" data-instrument="kick" data-step="7"></div>
-        </div>
+<div class="row">
+<div class="name">KICK</div>
+<div class="cube" data-instrument="kick" data-step="0"></div>
+<div class="cube" data-instrument="kick" data-step="1"></div>
+<div class="cube" data-instrument="kick" data-step="2"></div>
+<div class="cube" data-instrument="kick" data-step="3"></div>
+<div class="cube" data-instrument="kick" data-step="4"></div>
+<div class="cube" data-instrument="kick" data-step="5"></div>
+<div class="cube" data-instrument="kick" data-step="6"></div>
+<div class="cube" data-instrument="kick" data-step="7"></div>
+</div>
 
-        <div class="row">
-            <div class="name">SNARE</div>
-            <div class="cube" data-instrument="snare" data-step="0"></div>
-            <div class="cube" data-instrument="snare" data-step="1"></div>
-            <div class="cube" data-instrument="snare" data-step="2"></div>
-            <div class="cube" data-instrument="snare" data-step="3"></div>
-            <div class="cube" data-instrument="snare" data-step="4"></div>
-            <div class="cube" data-instrument="snare" data-step="5"></div>
-            <div class="cube" data-instrument="snare" data-step="6"></div>
-            <div class="cube" data-instrument="snare" data-step="7"></div>
-        </div>
+<div class="row">
+<div class="name">SNARE</div>
+<div class="cube" data-instrument="snare" data-step="0"></div>
+<div class="cube" data-instrument="snare" data-step="1"></div>
+<div class="cube" data-instrument="snare" data-step="2"></div>
+<div class="cube" data-instrument="snare" data-step="3"></div>
+<div class="cube" data-instrument="snare" data-step="4"></div>
+<div class="cube" data-instrument="snare" data-step="5"></div>
+<div class="cube" data-instrument="snare" data-step="6"></div>
+<div class="cube" data-instrument="snare" data-step="7"></div>
+</div>
 
-        <div class="row">
-            <div class="name">HI-HAT</div>
-            <div class="cube" data-instrument="hihat" data-step="0"></div>
-            <div class="cube" data-instrument="hihat" data-step="1"></div>
-            <div class="cube" data-instrument="hihat" data-step="2"></div>
-            <div class="cube" data-instrument="hihat" data-step="3"></div>
-            <div class="cube" data-instrument="hihat" data-step="4"></div>
-            <div class="cube" data-instrument="hihat" data-step="5"></div>
-            <div class="cube" data-instrument="hihat" data-step="6"></div>
-            <div class="cube" data-instrument="hihat" data-step="7"></div>
-        </div>
+<div class="row">
+<div class="name">HI-HAT</div>
+<div class="cube" data-instrument="hihat" data-step="0"></div>
+<div class="cube" data-instrument="hihat" data-step="1"></div>
+<div class="cube" data-instrument="hihat" data-step="2"></div>
+<div class="cube" data-instrument="hihat" data-step="3"></div>
+<div class="cube" data-instrument="hihat" data-step="4"></div>
+<div class="cube" data-instrument="hihat" data-step="5"></div>
+<div class="cube" data-instrument="hihat" data-step="6"></div>
+<div class="cube" data-instrument="hihat" data-step="7"></div>
+</div>
 
-    </div>
+</div>
 
-    <h2>🎹 8-BIT PIANO</h2>
+<h2>🎹 8-BIT PIANO</h2>
 
-    <div class="piano">
-        <div class="key" data-note="261.63">C<br>A</div>
-        <div class="key" data-note="293.66">D<br>S</div>
-        <div class="key" data-note="329.63">E<br>D</div>
-        <div class="key" data-note="349.23">F<br>F</div>
-        <div class="key" data-note="392">G<br>G</div>
-        <div class="key" data-note="440">A<br>H</div>
-        <div class="key" data-note="493.88">B<br>J</div>
-        <div class="key" data-note="523.25">C<br>K</div>
-    </div>
+<div class="piano">
+<div class="key" data-note="261.63">C<br>A</div>
+<div class="key" data-note="293.66">D<br>S</div>
+<div class="key" data-note="329.63">E<br>D</div>
+<div class="key" data-note="349.23">F<br>F</div>
+<div class="key" data-note="392">G<br>G</div>
+<div class="key" data-note="440">A<br>H</div>
+<div class="key" data-note="493.88">B<br>J</div>
+<div class="key" data-note="523.25">C<br>K</div>
+</div>
 
-    <div class="footer">
-        ✦ PLAY WITH A S D F G H J K ✦
-    </div>
+<div class="footer">
+✦ PLAY WITH A S D F G H J K ✦
+</div>
 
 </div>
 
@@ -266,13 +268,19 @@ const pattern = {
 };
 
 const cubes = document.querySelectorAll(".cube");
+const pianoKeys = document.querySelectorAll(".key");
+
 const playButton = document.getElementById("playButton");
+const saveButton = document.getElementById("saveButton");
+const loadButton = document.getElementById("loadButton");
+const clearButton = document.getElementById("clearButton");
+
 const bpmSlider = document.getElementById("bpm");
 const bpmValue = document.getElementById("bpmValue");
-const pianoKeys = document.querySelectorAll(".key");
 
 
 function getAudio() {
+
     if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -285,104 +293,156 @@ function getAudio() {
 }
 
 
+/* RETRO 8-BIT KICK */
+
 function kick() {
+
     const ctx = getAudio();
-    const oscillator = ctx.createOscillator();
+
+    const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
-    oscillator.type = "square";
-    oscillator.frequency.setValueAtTime(140, ctx.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(
-        50,
+    osc.type = "square";
+
+    osc.frequency.setValueAtTime(180, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(
+        45,
         ctx.currentTime + 0.12
     );
 
-    gain.gain.setValueAtTime(0.5, ctx.currentTime);
+    gain.gain.setValueAtTime(0.45, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(
         0.01,
-        ctx.currentTime + 0.15
+        ctx.currentTime + 0.16
     );
 
-    oscillator.connect(gain);
+    osc.connect(gain);
     gain.connect(ctx.destination);
 
-    oscillator.start();
-    oscillator.stop(ctx.currentTime + 0.15);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.16);
 }
 
+
+/* RETRO NOISE */
+
+function createNoiseBuffer(ctx, duration) {
+
+    const length = ctx.sampleRate * duration;
+
+    const buffer = ctx.createBuffer(
+        1,
+        length,
+        ctx.sampleRate
+    );
+
+    const data = buffer.getChannelData(0);
+
+    for (let i = 0; i < length; i++) {
+        data[i] = Math.random() * 2 - 1;
+    }
+
+    return buffer;
+}
+
+
+/* RETRO 8-BIT SNARE */
 
 function snare() {
+
     const ctx = getAudio();
-    const oscillator = ctx.createOscillator();
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = createNoiseBuffer(ctx, 0.12);
+
+    const filter = ctx.createBiquadFilter();
     const gain = ctx.createGain();
 
-    oscillator.type = "square";
-    oscillator.frequency.value = 180;
+    filter.type = "highpass";
+    filter.frequency.value = 1200;
 
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.setValueAtTime(0.28, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(
         0.01,
-        ctx.currentTime + 0.1
+        ctx.currentTime + 0.12
     );
 
-    oscillator.connect(gain);
+    noise.connect(filter);
+    filter.connect(gain);
     gain.connect(ctx.destination);
 
-    oscillator.start();
-    oscillator.stop(ctx.currentTime + 0.1);
+    noise.start();
 }
 
+
+/* RETRO 8-BIT HI-HAT */
 
 function hihat() {
+
     const ctx = getAudio();
-    const oscillator = ctx.createOscillator();
+
+    const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
-    oscillator.type = "square";
-    oscillator.frequency.value = 700;
+    osc.type = "square";
 
-    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(
-        0.01,
-        ctx.currentTime + 0.04
+    osc.frequency.value = 3000;
+
+    gain.gain.setValueAtTime(
+        0.10,
+        ctx.currentTime
     );
 
-    oscillator.connect(gain);
+    gain.gain.exponentialRampToValueAtTime(
+        0.01,
+        ctx.currentTime + 0.035
+    );
+
+    osc.connect(gain);
     gain.connect(ctx.destination);
 
-    oscillator.start();
-    oscillator.stop(ctx.currentTime + 0.04);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.04);
 }
 
 
+/* 8-BIT PIANO */
+
 function playNote(frequency) {
+
     const ctx = getAudio();
-    const oscillator = ctx.createOscillator();
+
+    const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
-    oscillator.type = "square";
-    oscillator.frequency.value = frequency;
+    osc.type = "square";
+    osc.frequency.value = frequency;
 
-    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+    gain.gain.setValueAtTime(
+        0.18,
+        ctx.currentTime
+    );
+
     gain.gain.exponentialRampToValueAtTime(
         0.01,
         ctx.currentTime + 0.5
     );
 
-    oscillator.connect(gain);
+    osc.connect(gain);
     gain.connect(ctx.destination);
 
-    oscillator.start();
-    oscillator.stop(ctx.currentTime + 0.5);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.5);
 }
 
 
+/* CLICKABLE PIANO */
+
 pianoKeys.forEach(function(key) {
+
     key.addEventListener("click", function() {
 
-        const frequency = Number(key.dataset.note);
-
-        playNote(frequency);
+        playNote(Number(key.dataset.note));
 
         key.classList.add("pressed");
 
@@ -391,10 +451,14 @@ pianoKeys.forEach(function(key) {
         }, 120);
 
     });
+
 });
 
 
+/* DRUM SQUARES */
+
 cubes.forEach(function(cube) {
+
     cube.addEventListener("click", function() {
 
         const instrument = cube.dataset.instrument;
@@ -414,6 +478,7 @@ cubes.forEach(function(cube) {
         }
 
     });
+
 });
 
 
@@ -445,18 +510,15 @@ function playStep() {
 function startSequencer() {
 
     const bpm = Number(bpmSlider.value);
-
     const interval = (60 / bpm) * 500;
 
     playStep();
 
-    timer = setInterval(
-        playStep,
-        interval
-    );
-
+    timer = setInterval(playStep, interval);
 }
 
+
+/* PLAY */
 
 playButton.addEventListener("click", function() {
 
@@ -476,7 +538,6 @@ playButton.addEventListener("click", function() {
         playing = false;
 
         clearInterval(timer);
-
         timer = null;
 
         playButton.textContent = "▶ PLAY";
@@ -490,17 +551,102 @@ playButton.addEventListener("click", function() {
 });
 
 
+/* BPM */
+
 bpmSlider.addEventListener("input", function() {
 
     bpmValue.textContent = bpmSlider.value;
 
     if (playing) {
-
         clearInterval(timer);
-
         startSequencer();
-
     }
+
+});
+
+
+/* SAVE BEAT */
+
+saveButton.addEventListener("click", function() {
+
+    const beat = {
+        pattern: pattern,
+        bpm: bpmSlider.value
+    };
+
+    localStorage.setItem(
+        "8bitBeatMakerSave",
+        JSON.stringify(beat)
+    );
+
+    saveButton.textContent = "✓ SAVED";
+
+    setTimeout(function() {
+        saveButton.textContent = "💾 SAVE";
+    }, 1200);
+
+});
+
+
+/* LOAD BEAT */
+
+loadButton.addEventListener("click", function() {
+
+    const savedBeat =
+        localStorage.getItem("8bitBeatMakerSave");
+
+    if (!savedBeat) {
+
+        loadButton.textContent = "NO SAVE";
+
+        setTimeout(function() {
+            loadButton.textContent = "📂 LOAD";
+        }, 1200);
+
+        return;
+    }
+
+    const beat = JSON.parse(savedBeat);
+
+    pattern.kick = beat.pattern.kick;
+    pattern.snare = beat.pattern.snare;
+    pattern.hihat = beat.pattern.hihat;
+
+    bpmSlider.value = beat.bpm;
+    bpmValue.textContent = beat.bpm;
+
+    cubes.forEach(function(cube) {
+
+        const instrument = cube.dataset.instrument;
+        const step = Number(cube.dataset.step);
+
+        cube.classList.toggle(
+            "active",
+            pattern[instrument][step]
+        );
+
+    });
+
+    loadButton.textContent = "✓ LOADED";
+
+    setTimeout(function() {
+        loadButton.textContent = "📂 LOAD";
+    }, 1200);
+
+});
+
+
+/* CLEAR BEAT */
+
+clearButton.addEventListener("click", function() {
+
+    pattern.kick.fill(false);
+    pattern.snare.fill(false);
+    pattern.hihat.fill(false);
+
+    cubes.forEach(function(cube) {
+        cube.classList.remove("active");
+    });
 
 });
 
@@ -537,7 +683,8 @@ document.addEventListener("keydown", function(event) {
 
     const pianoKey = Array.from(pianoKeys).find(
         function(key) {
-            return Number(key.dataset.note) === keyboardNotes[keyPressed];
+            return Number(key.dataset.note) ===
+                keyboardNotes[keyPressed];
         }
     );
 
@@ -554,13 +701,12 @@ document.addEventListener("keyup", function(event) {
 
     if (!(keyPressed in keyboardNotes)) return;
 
-    event.preventDefault();
-
     heldKeys.delete(keyPressed);
 
     const pianoKey = Array.from(pianoKeys).find(
         function(key) {
-            return Number(key.dataset.note) === keyboardNotes[keyPressed];
+            return Number(key.dataset.note) ===
+                keyboardNotes[keyPressed];
         }
     );
 
