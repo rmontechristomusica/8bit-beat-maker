@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>8-Bit Beat Maker V3</title>
 
     <style>
-
         * {
             box-sizing: border-box;
         }
@@ -64,10 +60,6 @@
             cursor: pointer;
         }
 
-        button:hover {
-            transform: scale(1.05);
-        }
-
         .bpm {
             text-align: center;
             margin-bottom: 30px;
@@ -101,7 +93,6 @@
             border: 2px solid #444;
             border-radius: 6px;
             cursor: pointer;
-            transition: 0.08s;
         }
 
         .cube.active {
@@ -114,8 +105,6 @@
             outline: 3px solid white;
             transform: scale(1.08);
         }
-
-        /* PIANO */
 
         .piano {
             display: flex;
@@ -139,10 +128,8 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.05s;
         }
 
-        .key:active,
         .key.pressed {
             background: #00e5ff;
             transform: translateY(5px);
@@ -156,7 +143,6 @@
         }
 
         @media (max-width: 600px) {
-
             body {
                 padding: 10px;
             }
@@ -187,11 +173,8 @@
                 height: 130px;
                 font-size: 12px;
             }
-
         }
-
     </style>
-
 </head>
 
 <body>
@@ -205,31 +188,15 @@
     </div>
 
     <div class="bpm">
-
         BPM:
-
-        <input
-            type="range"
-            id="bpm"
-            min="60"
-            max="180"
-            value="120"
-        >
-
+        <input type="range" id="bpm" min="60" max="180" value="120">
         <span id="bpmValue">120</span>
-
     </div>
-
-
-    <!-- DRUM SEQUENCER -->
 
     <div class="sequencer">
 
-
         <div class="row">
-
             <div class="name">KICK</div>
-
             <div class="cube" data-instrument="kick" data-step="0"></div>
             <div class="cube" data-instrument="kick" data-step="1"></div>
             <div class="cube" data-instrument="kick" data-step="2"></div>
@@ -238,14 +205,10 @@
             <div class="cube" data-instrument="kick" data-step="5"></div>
             <div class="cube" data-instrument="kick" data-step="6"></div>
             <div class="cube" data-instrument="kick" data-step="7"></div>
-
         </div>
 
-
         <div class="row">
-
             <div class="name">SNARE</div>
-
             <div class="cube" data-instrument="snare" data-step="0"></div>
             <div class="cube" data-instrument="snare" data-step="1"></div>
             <div class="cube" data-instrument="snare" data-step="2"></div>
@@ -254,14 +217,10 @@
             <div class="cube" data-instrument="snare" data-step="5"></div>
             <div class="cube" data-instrument="snare" data-step="6"></div>
             <div class="cube" data-instrument="snare" data-step="7"></div>
-
         </div>
 
-
         <div class="row">
-
             <div class="name">HI-HAT</div>
-
             <div class="cube" data-instrument="hihat" data-step="0"></div>
             <div class="cube" data-instrument="hihat" data-step="1"></div>
             <div class="cube" data-instrument="hihat" data-step="2"></div>
@@ -270,386 +229,224 @@
             <div class="cube" data-instrument="hihat" data-step="5"></div>
             <div class="cube" data-instrument="hihat" data-step="6"></div>
             <div class="cube" data-instrument="hihat" data-step="7"></div>
-
         </div>
 
     </div>
 
-
-    <!-- PIANO -->
-
     <h2>🎹 8-BIT PIANO</h2>
 
     <div class="piano">
-
-        <div class="key" data-note="261.63">C</div>
-        <div class="key" data-note="293.66">D</div>
-        <div class="key" data-note="329.63">E</div>
-        <div class="key" data-note="349.23">F</div>
-        <div class="key" data-note="392.00">G</div>
-        <div class="key" data-note="440.00">A</div>
-        <div class="key" data-note="493.88">B</div>
-        <div class="key" data-note="523.25">C</div>
-
+        <div class="key" data-note="261.63">C<br>A</div>
+        <div class="key" data-note="293.66">D<br>S</div>
+        <div class="key" data-note="329.63">E<br>D</div>
+        <div class="key" data-note="349.23">F<br>F</div>
+        <div class="key" data-note="392">G<br>G</div>
+        <div class="key" data-note="440">A<br>H</div>
+        <div class="key" data-note="493.88">B<br>J</div>
+        <div class="key" data-note="523.25">C<br>K</div>
     </div>
 
-
     <div class="footer">
-        ✦ MAKE A TINY BEAT ✦
+        ✦ PLAY WITH A S D F G H J K ✦
     </div>
 
 </div>
 
-
 <script>
 
 let audioContext;
-
 let playing = false;
-
 let currentStep = 0;
-
 let timer = null;
 
-
 const pattern = {
-
     kick: Array(8).fill(false),
-
     snare: Array(8).fill(false),
-
     hihat: Array(8).fill(false)
-
 };
 
-
 const cubes = document.querySelectorAll(".cube");
-
 const playButton = document.getElementById("playButton");
-
 const bpmSlider = document.getElementById("bpm");
-
 const bpmValue = document.getElementById("bpmValue");
+const pianoKeys = document.querySelectorAll(".key");
 
-const keys = document.querySelectorAll(".key");
-
-
-/* AUDIO */
 
 function getAudio() {
-
     if (!audioContext) {
-
-        audioContext = new AudioContext();
-
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
 
     if (audioContext.state === "suspended") {
-
         audioContext.resume();
-
     }
 
     return audioContext;
-
 }
 
 
-/* KICK */
-
 function kick() {
-
     const ctx = getAudio();
-
     const oscillator = ctx.createOscillator();
-
     const gain = ctx.createGain();
 
     oscillator.type = "square";
-
-    oscillator.frequency.setValueAtTime(
-        140,
-        ctx.currentTime
-    );
-
+    oscillator.frequency.setValueAtTime(140, ctx.currentTime);
     oscillator.frequency.exponentialRampToValueAtTime(
         50,
         ctx.currentTime + 0.12
     );
 
-    gain.gain.setValueAtTime(
-        0.5,
-        ctx.currentTime
-    );
-
+    gain.gain.setValueAtTime(0.5, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(
         0.01,
         ctx.currentTime + 0.15
     );
 
     oscillator.connect(gain);
-
     gain.connect(ctx.destination);
 
     oscillator.start();
-
-    oscillator.stop(
-        ctx.currentTime + 0.15
-    );
-
+    oscillator.stop(ctx.currentTime + 0.15);
 }
 
-
-/* SNARE */
 
 function snare() {
-
     const ctx = getAudio();
-
     const oscillator = ctx.createOscillator();
-
     const gain = ctx.createGain();
 
     oscillator.type = "square";
-
     oscillator.frequency.value = 180;
 
-    gain.gain.setValueAtTime(
-        0.3,
-        ctx.currentTime
-    );
-
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(
         0.01,
         ctx.currentTime + 0.1
     );
 
     oscillator.connect(gain);
-
     gain.connect(ctx.destination);
 
     oscillator.start();
-
-    oscillator.stop(
-        ctx.currentTime + 0.1
-    );
-
+    oscillator.stop(ctx.currentTime + 0.1);
 }
 
-
-/* HI-HAT */
 
 function hihat() {
-
     const ctx = getAudio();
-
     const oscillator = ctx.createOscillator();
-
     const gain = ctx.createGain();
 
     oscillator.type = "square";
-
     oscillator.frequency.value = 700;
 
-    gain.gain.setValueAtTime(
-        0.15,
-        ctx.currentTime
-    );
-
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(
         0.01,
         ctx.currentTime + 0.04
     );
 
     oscillator.connect(gain);
-
     gain.connect(ctx.destination);
 
     oscillator.start();
-
-    oscillator.stop(
-        ctx.currentTime + 0.04
-    );
-
+    oscillator.stop(ctx.currentTime + 0.04);
 }
 
 
-/* PIANO NOTE */
-
 function playNote(frequency) {
-
     const ctx = getAudio();
-
     const oscillator = ctx.createOscillator();
-
     const gain = ctx.createGain();
 
     oscillator.type = "square";
-
     oscillator.frequency.value = frequency;
 
-    gain.gain.setValueAtTime(
-        0.18,
-        ctx.currentTime
-    );
-
+    gain.gain.setValueAtTime(0.18, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(
         0.01,
         ctx.currentTime + 0.5
     );
 
     oscillator.connect(gain);
-
     gain.connect(ctx.destination);
 
     oscillator.start();
-
-    oscillator.stop(
-        ctx.currentTime + 0.5
-    );
-
+    oscillator.stop(ctx.currentTime + 0.5);
 }
 
 
-/* PIANO CLICKING */
+pianoKeys.forEach(function(key) {
+    key.addEventListener("click", function() {
 
-keys.forEach(key => {
-
-    key.addEventListener("click", () => {
-
-        const frequency =
-            Number(key.dataset.note);
+        const frequency = Number(key.dataset.note);
 
         playNote(frequency);
 
         key.classList.add("pressed");
 
-        setTimeout(() => {
-
+        setTimeout(function() {
             key.classList.remove("pressed");
-
-        }, 100);
+        }, 120);
 
     });
-
 });
 
 
-/* CUBE CLICKING */
+cubes.forEach(function(cube) {
+    cube.addEventListener("click", function() {
 
-cubes.forEach(cube => {
-
-    cube.addEventListener("click", () => {
-
-        const instrument =
-            cube.dataset.instrument;
-
-        const step =
-            Number(cube.dataset.step);
+        const instrument = cube.dataset.instrument;
+        const step = Number(cube.dataset.step);
 
         pattern[instrument][step] =
             !pattern[instrument][step];
 
-        cube.classList.toggle(
-            "active"
-        );
+        cube.classList.toggle("active");
 
-        if (
-            pattern[instrument][step]
-        ) {
+        if (pattern[instrument][step]) {
 
-            if (instrument === "kick") {
-                kick();
-            }
-
-            if (instrument === "snare") {
-                snare();
-            }
-
-            if (instrument === "hihat") {
-                hihat();
-            }
+            if (instrument === "kick") kick();
+            if (instrument === "snare") snare();
+            if (instrument === "hihat") hihat();
 
         }
 
     });
-
 });
 
 
-/* PLAY ONE STEP */
-
 function playStep() {
 
-    cubes.forEach(cube => {
-
-        cube.classList.remove(
-            "playing"
-        );
-
+    cubes.forEach(function(cube) {
+        cube.classList.remove("playing");
     });
 
-
     document
-        .querySelectorAll(
-            `[data-step="${currentStep}"]`
-        )
-        .forEach(cube => {
-
-            cube.classList.add(
-                "playing"
-            );
-
+        .querySelectorAll(`[data-step="${currentStep}"]`)
+        .forEach(function(cube) {
+            cube.classList.add("playing");
         });
 
-
-    if (
-        pattern.kick[currentStep]
-    ) {
-
-        kick();
-
-    }
-
-
-    if (
-        pattern.snare[currentStep]
-    ) {
-
-        snare();
-
-    }
-
-
-    if (
-        pattern.hihat[currentStep]
-    ) {
-
-        hihat();
-
-    }
-
+    if (pattern.kick[currentStep]) kick();
+    if (pattern.snare[currentStep]) snare();
+    if (pattern.hihat[currentStep]) hihat();
 
     currentStep++;
 
     if (currentStep >= 8) {
-
         currentStep = 0;
-
     }
 
 }
 
 
-/* START SEQUENCER */
-
 function startSequencer() {
 
-    const bpm =
-        Number(bpmSlider.value);
+    const bpm = Number(bpmSlider.value);
 
-    const interval =
-        (60 / bpm) * 500;
+    const interval = (60 / bpm) * 500;
 
     playStep();
 
@@ -661,104 +458,87 @@ function startSequencer() {
 }
 
 
-/* PLAY BUTTON */
+playButton.addEventListener("click", function() {
 
-playButton.addEventListener(
-    "click",
-    () => {
+    getAudio();
 
-        getAudio();
+    if (!playing) {
 
-        if (!playing) {
+        playing = true;
+        currentStep = 0;
 
-            playing = true;
+        playButton.textContent = "■ STOP";
 
-            currentStep = 0;
+        startSequencer();
 
-            playButton.textContent =
-                "■ STOP";
+    } else {
 
-            startSequencer();
+        playing = false;
 
-        }
+        clearInterval(timer);
 
-        else {
+        timer = null;
 
-            playing = false;
+        playButton.textContent = "▶ PLAY";
 
-            clearInterval(timer);
-
-            timer = null;
-
-            playButton.textContent =
-                "▶ PLAY";
-
-            cubes.forEach(cube => {
-
-                cube.classList.remove(
-                    "playing"
-                );
-
-            });
-
-        }
+        cubes.forEach(function(cube) {
+            cube.classList.remove("playing");
+        });
 
     }
-);
+
+});
 
 
-/* BPM */
+bpmSlider.addEventListener("input", function() {
 
-bpmSlider.addEventListener(
-    "input",
-    () => {
+    bpmValue.textContent = bpmSlider.value;
 
-        bpmValue.textContent =
-            bpmSlider.value;
+    if (playing) {
 
-        if (playing) {
+        clearInterval(timer);
 
-            clearInterval(timer);
-
-            startSequencer();
-
-        }
+        startSequencer();
 
     }
-);
+
+});
+
+
 /* COMPUTER KEYBOARD PIANO */
 
 const keyboardNotes = {
-    "a": 261.63,
-    "s": 293.66,
-    "d": 329.63,
-    "f": 349.23,
-    "g": 392.00,
-    "h": 440.00,
-    "j": 493.88,
-    "k": 523.25
+    a: 261.63,
+    s: 293.66,
+    d: 329.63,
+    f: 349.23,
+    g: 392,
+    h: 440,
+    j: 493.88,
+    k: 523.25
 };
-
-
-/* PREVENT HOLDING A KEY FROM REPEATING */
 
 const heldKeys = new Set();
 
 
-document.addEventListener("keydown", event => {
+document.addEventListener("keydown", function(event) {
 
     const keyPressed = event.key.toLowerCase();
 
-    if (!keyboardNotes[keyPressed]) return;
+    if (!(keyPressed in keyboardNotes)) return;
 
-    if (heldKeys.has(keyPressed)) return;
+    event.preventDefault();
+
+    if (event.repeat || heldKeys.has(keyPressed)) return;
 
     heldKeys.add(keyPressed);
 
     playNote(keyboardNotes[keyPressed]);
 
-    const pianoKey = document.querySelector(
-        `.key[data-note="${keyboardNotes[keyPressed]}"]`
+    const pianoKey = Array.from(pianoKeys).find(
+        function(key) {
+            return Number(key.dataset.note) === keyboardNotes[keyPressed];
+        }
     );
 
     if (pianoKey) {
@@ -768,16 +548,20 @@ document.addEventListener("keydown", event => {
 });
 
 
-document.addEventListener("keyup", event => {
+document.addEventListener("keyup", function(event) {
 
     const keyPressed = event.key.toLowerCase();
 
-    if (!keyboardNotes[keyPressed]) return;
+    if (!(keyPressed in keyboardNotes)) return;
+
+    event.preventDefault();
 
     heldKeys.delete(keyPressed);
 
-    const pianoKey = document.querySelector(
-        `.key[data-note="${keyboardNotes[keyPressed]}"]`
+    const pianoKey = Array.from(pianoKeys).find(
+        function(key) {
+            return Number(key.dataset.note) === keyboardNotes[keyPressed];
+        }
     );
 
     if (pianoKey) {
@@ -785,8 +569,19 @@ document.addEventListener("keyup", event => {
     }
 
 });
+
+
+window.addEventListener("blur", function() {
+
+    heldKeys.clear();
+
+    pianoKeys.forEach(function(key) {
+        key.classList.remove("pressed");
+    });
+
+});
+
 </script>
 
 </body>
-
 </html>
