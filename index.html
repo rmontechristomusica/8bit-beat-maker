@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>8-Bit Beat Maker V2</title>
+    <title>8-Bit Beat Maker V3</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -37,6 +41,12 @@
             color: #00e5ff;
             letter-spacing: 3px;
             margin-top: 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #ffcc00;
+            margin-top: 35px;
         }
 
         .controls {
@@ -105,6 +115,40 @@
             transform: scale(1.08);
         }
 
+        /* PIANO */
+
+        .piano {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .key {
+            width: 75px;
+            height: 180px;
+            background: white;
+            color: black;
+            border: 3px solid #222;
+            border-radius: 0 0 8px 8px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.05s;
+        }
+
+        .key:active,
+        .key.pressed {
+            background: #00e5ff;
+            transform: translateY(5px);
+            box-shadow: 0 0 15px #00e5ff;
+        }
+
         .footer {
             text-align: center;
             margin-top: 30px;
@@ -137,8 +181,17 @@
             .name {
                 font-size: 11px;
             }
+
+            .key {
+                width: 38px;
+                height: 130px;
+                font-size: 12px;
+            }
+
         }
+
     </style>
+
 </head>
 
 <body>
@@ -152,7 +205,9 @@
     </div>
 
     <div class="bpm">
+
         BPM:
+
         <input
             type="range"
             id="bpm"
@@ -162,11 +217,14 @@
         >
 
         <span id="bpmValue">120</span>
+
     </div>
+
+
+    <!-- DRUM SEQUENCER -->
 
     <div class="sequencer">
 
-        <!-- KICK -->
 
         <div class="row">
 
@@ -183,7 +241,6 @@
 
         </div>
 
-        <!-- SNARE -->
 
         <div class="row">
 
@@ -200,7 +257,6 @@
 
         </div>
 
-        <!-- HI HAT -->
 
         <div class="row">
 
@@ -218,6 +274,25 @@
         </div>
 
     </div>
+
+
+    <!-- PIANO -->
+
+    <h2>🎹 8-BIT PIANO</h2>
+
+    <div class="piano">
+
+        <div class="key" data-note="261.63">C</div>
+        <div class="key" data-note="293.66">D</div>
+        <div class="key" data-note="329.63">E</div>
+        <div class="key" data-note="349.23">F</div>
+        <div class="key" data-note="392.00">G</div>
+        <div class="key" data-note="440.00">A</div>
+        <div class="key" data-note="493.88">B</div>
+        <div class="key" data-note="523.25">C</div>
+
+    </div>
+
 
     <div class="footer">
         ✦ MAKE A TINY BEAT ✦
@@ -255,6 +330,8 @@ const playButton = document.getElementById("playButton");
 const bpmSlider = document.getElementById("bpm");
 
 const bpmValue = document.getElementById("bpmValue");
+
+const keys = document.querySelectorAll(".key");
 
 
 /* AUDIO */
@@ -360,7 +437,7 @@ function snare() {
 }
 
 
-/* HI HAT */
+/* HI-HAT */
 
 function hihat() {
 
@@ -395,6 +472,67 @@ function hihat() {
     );
 
 }
+
+
+/* PIANO NOTE */
+
+function playNote(frequency) {
+
+    const ctx = getAudio();
+
+    const oscillator = ctx.createOscillator();
+
+    const gain = ctx.createGain();
+
+    oscillator.type = "square";
+
+    oscillator.frequency.value = frequency;
+
+    gain.gain.setValueAtTime(
+        0.18,
+        ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.01,
+        ctx.currentTime + 0.5
+    );
+
+    oscillator.connect(gain);
+
+    gain.connect(ctx.destination);
+
+    oscillator.start();
+
+    oscillator.stop(
+        ctx.currentTime + 0.5
+    );
+
+}
+
+
+/* PIANO CLICKING */
+
+keys.forEach(key => {
+
+    key.addEventListener("click", () => {
+
+        const frequency =
+            Number(key.dataset.note);
+
+        playNote(frequency);
+
+        key.classList.add("pressed");
+
+        setTimeout(() => {
+
+            key.classList.remove("pressed");
+
+        }, 100);
+
+    });
+
+});
 
 
 /* CUBE CLICKING */
@@ -468,21 +606,27 @@ function playStep() {
     if (
         pattern.kick[currentStep]
     ) {
+
         kick();
+
     }
 
 
     if (
         pattern.snare[currentStep]
     ) {
+
         snare();
+
     }
 
 
     if (
         pattern.hihat[currentStep]
     ) {
+
         hihat();
+
     }
 
 
@@ -497,7 +641,7 @@ function playStep() {
 }
 
 
-/* START */
+/* START SEQUENCER */
 
 function startSequencer() {
 
@@ -586,4 +730,5 @@ bpmSlider.addEventListener(
 </script>
 
 </body>
+
 </html>
