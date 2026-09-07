@@ -4,63 +4,159 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>8-Bit Beat Maker V5</title>
+<title>8-Bit Beat Lab V6</title>
 
 <style>
-* { box-sizing: border-box; }
+
+* {
+    box-sizing: border-box;
+}
 
 body {
     margin: 0;
     min-height: 100vh;
-    background: #111;
     color: white;
     font-family: monospace;
-    padding: 20px;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(0, 229, 255, 0.15), transparent 25%),
+        radial-gradient(circle at 80% 10%, rgba(255, 0, 170, 0.15), transparent 25%),
+        linear-gradient(180deg, #090912 0%, #111122 50%, #080810 100%);
+    overflow-x: hidden;
+}
+
+/* Animated neon background */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(0,229,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridMove 8s linear infinite;
+    z-index: -1;
+}
+
+@keyframes gridMove {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 0 40px;
+    }
 }
 
 .app {
     width: 100%;
-    max-width: 950px;
-    margin: auto;
-    background: #1b1b1b;
-    border: 3px solid #444;
-    border-radius: 15px;
+    max-width: 1000px;
+    margin: 30px auto;
     padding: 25px;
+    background: rgba(18, 18, 32, 0.95);
+    border: 2px solid #00e5ff;
+    border-radius: 20px;
+    box-shadow:
+        0 0 20px rgba(0,229,255,.4),
+        0 0 60px rgba(255,0,170,.12);
 }
 
 h1 {
     text-align: center;
     color: #00e5ff;
-    letter-spacing: 3px;
+    letter-spacing: 4px;
+    text-shadow:
+        0 0 8px #00e5ff,
+        0 0 20px #00e5ff;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #ff3cac;
+    margin-bottom: 25px;
+    letter-spacing: 2px;
 }
 
 h2 {
     text-align: center;
     color: #ffcc00;
     margin-top: 35px;
+    text-shadow: 0 0 10px rgba(255,204,0,.5);
 }
+
+/* Controls */
 
 .controls {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
     margin: 25px 0;
 }
 
 button {
-    background: #00e5ff;
-    border: none;
+    color: white;
+    background: linear-gradient(135deg, #00a8c6, #005b70);
+    border: 1px solid #00e5ff;
     border-radius: 8px;
     padding: 12px 18px;
     font-family: monospace;
     font-weight: bold;
     cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,229,255,.25);
+    transition: .15s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0,229,255,.7);
+}
+
+#clearButton {
+    background: linear-gradient(135deg, #9d164b, #4c0924);
+    border-color: #ff3cac;
 }
 
 .bpm {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+}
+
+.bpm input {
+    width: 220px;
+    accent-color: #00e5ff;
+}
+
+/* Bass controls */
+
+.bass-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 15px 0 25px;
+}
+
+select {
+    background: #111;
+    color: #00e5ff;
+    border: 1px solid #00e5ff;
+    padding: 9px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+/* Sequencer */
+
+.sequencer {
+    padding: 20px;
+    border: 1px solid rgba(0,229,255,.25);
+    border-radius: 15px;
+    background: rgba(0,0,0,.25);
 }
 
 .row {
@@ -73,48 +169,55 @@ button {
 
 .name {
     text-align: right;
-    padding-right: 5px;
+    padding-right: 8px;
+    color: #ddd;
+    font-weight: bold;
 }
 
 .cube {
-    height: 45px;
-    background: #292929;
-    border: 2px solid #444;
-    border-radius: 6px;
+    height: 48px;
+    background: #20202d;
+    border: 2px solid #38384a;
+    border-radius: 7px;
     cursor: pointer;
+    transition: .1s;
+}
+
+.cube:hover {
+    border-color: #00e5ff;
 }
 
 .cube.active {
-    background: #00e5ff;
+    background: #00c7db;
     border-color: white;
-    box-shadow: 0 0 12px #00e5ff;
+    box-shadow: 0 0 15px #00e5ff;
 }
 
 .cube.playing {
-    outline: 3px solid white;
-    transform: scale(1.08);
+    outline: 3px solid #ffcc00;
+    box-shadow: 0 0 20px #ffcc00;
 }
 
-/* PIANO */
+/* Piano */
 
 .piano-wrap {
     display: flex;
     justify-content: center;
     overflow-x: auto;
-    padding: 10px 0;
+    padding: 15px 0;
 }
 
 .piano {
     position: relative;
     width: 650px;
-    height: 190px;
+    height: 195px;
     display: flex;
 }
 
 .white-key {
     width: 50px;
     height: 180px;
-    background: white;
+    background: linear-gradient(#ffffff, #dddddd);
     color: black;
     border: 2px solid #222;
     display: flex;
@@ -124,16 +227,17 @@ button {
     font-weight: bold;
     cursor: pointer;
     z-index: 1;
+    user-select: none;
 }
 
 .black-key {
     position: absolute;
     width: 32px;
     height: 110px;
-    background: #111;
+    background: linear-gradient(#333, #050505);
     color: white;
-    border: 2px solid #555;
-    border-radius: 0 0 5px 5px;
+    border: 2px solid #666;
+    border-radius: 0 0 6px 6px;
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -141,16 +245,13 @@ button {
     font-size: 11px;
     cursor: pointer;
     z-index: 2;
+    user-select: none;
 }
 
 .key.pressed {
     background: #00e5ff;
     color: black;
-    box-shadow: 0 0 15px #00e5ff;
-}
-
-.black-key.pressed {
-    background: #00e5ff;
+    box-shadow: 0 0 25px #00e5ff;
 }
 
 .b1 { left: 34px; }
@@ -158,28 +259,43 @@ button {
 .b3 { left: 184px; }
 .b4 { left: 234px; }
 .b5 { left: 284px; }
-.b6 { left: 384px; }
-.b7 { left: 434px; }
-.b8 { left: 534px; }
-.b9 { left: 584px; }
 
 .footer {
     text-align: center;
-    color: #777;
+    color: #999;
     margin-top: 20px;
+    padding-bottom: 10px;
 }
 
 @media (max-width: 600px) {
-    .app { padding: 12px; }
+
+    body {
+        padding: 5px;
+    }
+
+    .app {
+        padding: 12px;
+        margin: 5px auto;
+    }
 
     .row {
-        grid-template-columns: 60px repeat(8, 1fr);
+        grid-template-columns: 58px repeat(8, 1fr);
         gap: 4px;
     }
 
-    .name { font-size: 10px; }
-    .cube { height: 40px; }
+    .name {
+        font-size: 9px;
+    }
+
+    .cube {
+        height: 42px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
 }
+
 </style>
 </head>
 
@@ -187,25 +303,73 @@ button {
 
 <div class="app">
 
-<h1>🎮 8-BIT BEAT MAKER V5</h1>
+<h1>🎮 8-BIT BEAT LAB</h1>
+
+<div class="subtitle">
+VERSION 6 • HIP-HOP • RETRO • WEST COAST KEYS
+</div>
 
 <div class="controls">
-    <button id="playButton">▶ PLAY</button>
-    <button id="saveButton">💾 SAVE</button>
-    <button id="loadButton">📂 LOAD</button>
-    <button id="clearButton">🗑️ CLEAR</button>
+
+<button id="playButton">▶ PLAY</button>
+
+<button id="saveButton">💾 SAVE</button>
+
+<button id="loadButton">📂 LOAD</button>
+
+<button id="clearButton">🗑️ CLEAR</button>
+
 </div>
 
 <div class="bpm">
-    BPM:
-    <input type="range" id="bpm" min="60" max="180" value="100">
-    <span id="bpmValue">100</span>
+
+BPM:
+
+<input
+type="range"
+id="bpm"
+min="60"
+max="180"
+value="100"
+>
+
+<span id="bpmValue">100</span>
+
 </div>
+
+
+<div class="bass-controls">
+
+<label for="bassNote">🎵 BASS NOTE:</label>
+
+<select id="bassNote">
+
+<option value="C">C</option>
+<option value="C#">C#</option>
+<option value="D">D</option>
+<option value="D#">D#</option>
+<option value="E">E</option>
+<option value="F">F</option>
+<option value="F#">F#</option>
+<option value="G">G</option>
+<option value="G#">G#</option>
+<option value="A" selected>A</option>
+<option value="A#">A#</option>
+<option value="B">B</option>
+
+</select>
+
+</div>
+
 
 <div class="sequencer">
 
+<!-- KICK -->
+
 <div class="row">
+
 <div class="name">KICK</div>
+
 <div class="cube" data-instrument="kick" data-step="0"></div>
 <div class="cube" data-instrument="kick" data-step="1"></div>
 <div class="cube" data-instrument="kick" data-step="2"></div>
@@ -214,10 +378,16 @@ button {
 <div class="cube" data-instrument="kick" data-step="5"></div>
 <div class="cube" data-instrument="kick" data-step="6"></div>
 <div class="cube" data-instrument="kick" data-step="7"></div>
+
 </div>
 
+
+<!-- SNARE -->
+
 <div class="row">
+
 <div class="name">SNARE</div>
+
 <div class="cube" data-instrument="snare" data-step="0"></div>
 <div class="cube" data-instrument="snare" data-step="1"></div>
 <div class="cube" data-instrument="snare" data-step="2"></div>
@@ -226,10 +396,16 @@ button {
 <div class="cube" data-instrument="snare" data-step="5"></div>
 <div class="cube" data-instrument="snare" data-step="6"></div>
 <div class="cube" data-instrument="snare" data-step="7"></div>
+
 </div>
 
+
+<!-- HIHAT -->
+
 <div class="row">
+
 <div class="name">HI-HAT</div>
+
 <div class="cube" data-instrument="hihat" data-step="0"></div>
 <div class="cube" data-instrument="hihat" data-step="1"></div>
 <div class="cube" data-instrument="hihat" data-step="2"></div>
@@ -238,10 +414,16 @@ button {
 <div class="cube" data-instrument="hihat" data-step="5"></div>
 <div class="cube" data-instrument="hihat" data-step="6"></div>
 <div class="cube" data-instrument="hihat" data-step="7"></div>
+
 </div>
 
+
+<!-- CLAP -->
+
 <div class="row">
+
 <div class="name">CLAP</div>
+
 <div class="cube" data-instrument="clap" data-step="0"></div>
 <div class="cube" data-instrument="clap" data-step="1"></div>
 <div class="cube" data-instrument="clap" data-step="2"></div>
@@ -250,10 +432,16 @@ button {
 <div class="cube" data-instrument="clap" data-step="5"></div>
 <div class="cube" data-instrument="clap" data-step="6"></div>
 <div class="cube" data-instrument="clap" data-step="7"></div>
+
 </div>
 
+
+<!-- TOM -->
+
 <div class="row">
+
 <div class="name">TOM</div>
+
 <div class="cube" data-instrument="tom" data-step="0"></div>
 <div class="cube" data-instrument="tom" data-step="1"></div>
 <div class="cube" data-instrument="tom" data-step="2"></div>
@@ -262,10 +450,16 @@ button {
 <div class="cube" data-instrument="tom" data-step="5"></div>
 <div class="cube" data-instrument="tom" data-step="6"></div>
 <div class="cube" data-instrument="tom" data-step="7"></div>
+
 </div>
 
+
+<!-- BASS -->
+
 <div class="row">
+
 <div class="name">BASS</div>
+
 <div class="cube" data-instrument="bass" data-step="0"></div>
 <div class="cube" data-instrument="bass" data-step="1"></div>
 <div class="cube" data-instrument="bass" data-step="2"></div>
@@ -274,38 +468,58 @@ button {
 <div class="cube" data-instrument="bass" data-step="5"></div>
 <div class="cube" data-instrument="bass" data-step="6"></div>
 <div class="cube" data-instrument="bass" data-step="7"></div>
-</div>
 
 </div>
 
-<h2>🎹 8-BIT PIANO</h2>
+</div>
+
+
+<h2>🎹 WEST COAST KEYS</h2>
 
 <div class="piano-wrap">
+
 <div class="piano">
 
 <div class="white-key key" data-note="261.63">C<br>A</div>
+
 <div class="white-key key" data-note="293.66">D<br>S</div>
+
 <div class="white-key key" data-note="329.63">E<br>D</div>
+
 <div class="white-key key" data-note="349.23">F<br>F</div>
+
 <div class="white-key key" data-note="392">G<br>G</div>
+
 <div class="white-key key" data-note="440">A<br>H</div>
+
 <div class="white-key key" data-note="493.88">B<br>J</div>
+
 <div class="white-key key" data-note="523.25">C<br>K</div>
 
+
 <div class="black-key key b1" data-note="277.18">C#<br>W</div>
+
 <div class="black-key key b2" data-note="311.13">D#<br>E</div>
+
 <div class="black-key key b3" data-note="369.99">F#<br>T</div>
+
 <div class="black-key key b4" data-note="415.30">G#<br>Y</div>
+
 <div class="black-key key b5" data-note="466.16">A#<br>U</div>
 
 </div>
+
 </div>
+
 
 <div class="footer">
-✦ KEYBOARD: A W S E D F T G Y H U J K ✦
+
+✦ PLAY WITH: A W S E D F T G Y H U J K ✦
+
 </div>
 
 </div>
+
 
 <script>
 
@@ -315,341 +529,954 @@ let currentStep = 0;
 let timer = null;
 
 const pattern = {
+
     kick: Array(8).fill(false),
     snare: Array(8).fill(false),
     hihat: Array(8).fill(false),
     clap: Array(8).fill(false),
     tom: Array(8).fill(false),
     bass: Array(8).fill(false)
+
 };
 
+
 const cubes = document.querySelectorAll(".cube");
+
 const pianoKeys = document.querySelectorAll(".key");
 
-const playButton = document.getElementById("playButton");
-const saveButton = document.getElementById("saveButton");
-const loadButton = document.getElementById("loadButton");
-const clearButton = document.getElementById("clearButton");
-const bpmSlider = document.getElementById("bpm");
-const bpmValue = document.getElementById("bpmValue");
+const playButton =
+document.getElementById("playButton");
+
+const saveButton =
+document.getElementById("saveButton");
+
+const loadButton =
+document.getElementById("loadButton");
+
+const clearButton =
+document.getElementById("clearButton");
+
+const bpmSlider =
+document.getElementById("bpm");
+
+const bpmValue =
+document.getElementById("bpmValue");
+
+const bassSelector =
+document.getElementById("bassNote");
+
 
 function getAudio() {
+
     if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        audioContext =
+        new (window.AudioContext ||
+        window.webkitAudioContext)();
+
     }
-    if (audioContext.state === "suspended") audioContext.resume();
+
+    if (audioContext.state === "suspended") {
+
+        audioContext.resume();
+
+    }
+
     return audioContext;
+
 }
+
 
 function noise(duration) {
-    const ctx = getAudio();
-    const buffer = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
 
-    for (let i = 0; i < data.length; i++) {
-        data[i] = Math.random() * 2 - 1;
+    const ctx = getAudio();
+
+    const buffer =
+    ctx.createBuffer(
+        1,
+        ctx.sampleRate * duration,
+        ctx.sampleRate
+    );
+
+    const data =
+    buffer.getChannelData(0);
+
+    for (
+        let i = 0;
+        i < data.length;
+        i++
+    ) {
+
+        data[i] =
+        Math.random() * 2 - 1;
+
     }
 
-    const source = ctx.createBufferSource();
+    const source =
+    ctx.createBufferSource();
+
     source.buffer = buffer;
+
     return source;
+
 }
 
-/* HIP-HOP KICK */
+
+/* KICK */
+
 function kick() {
+
     const ctx = getAudio();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+
+    const osc =
+    ctx.createOscillator();
+
+    const gain =
+    ctx.createGain();
 
     osc.type = "sine";
-    osc.frequency.setValueAtTime(150, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.25);
 
-    gain.gain.setValueAtTime(0.9, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+    osc.frequency.setValueAtTime(
+        150,
+        ctx.currentTime
+    );
+
+    osc.frequency.exponentialRampToValueAtTime(
+        45,
+        ctx.currentTime + .25
+    );
+
+    gain.gain.setValueAtTime(
+        .9,
+        ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        .01,
+        ctx.currentTime + .3
+    );
 
     osc.connect(gain);
+
     gain.connect(ctx.destination);
 
     osc.start();
-    osc.stop(ctx.currentTime + 0.3);
+
+    osc.stop(
+        ctx.currentTime + .3
+    );
+
 }
+
 
 /* SNARE */
+
 function snare() {
+
     const ctx = getAudio();
-    const source = noise(0.18);
-    const filter = ctx.createBiquadFilter();
-    const gain = ctx.createGain();
+
+    const source =
+    noise(.18);
+
+    const filter =
+    ctx.createBiquadFilter();
+
+    const gain =
+    ctx.createGain();
 
     filter.type = "highpass";
+
     filter.frequency.value = 900;
 
-    gain.gain.setValueAtTime(0.35, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.18);
+    gain.gain.setValueAtTime(
+        .35,
+        ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        .01,
+        ctx.currentTime + .18
+    );
 
     source.connect(filter);
+
     filter.connect(gain);
+
     gain.connect(ctx.destination);
 
     source.start();
+
 }
 
-/* HI-HAT */
+
+/* HI HAT */
+
 function hihat() {
+
     const ctx = getAudio();
-    const source = noise(0.06);
-    const filter = ctx.createBiquadFilter();
-    const gain = ctx.createGain();
+
+    const source =
+    noise(.06);
+
+    const filter =
+    ctx.createBiquadFilter();
+
+    const gain =
+    ctx.createGain();
 
     filter.type = "highpass";
+
     filter.frequency.value = 7000;
 
-    gain.gain.setValueAtTime(0.12, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.06);
+    gain.gain.setValueAtTime(
+        .12,
+        ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        .01,
+        ctx.currentTime + .06
+    );
 
     source.connect(filter);
+
     filter.connect(gain);
+
     gain.connect(ctx.destination);
 
     source.start();
+
 }
+
 
 /* CLAP */
+
 function clap() {
+
     const ctx = getAudio();
 
-    [0, 0.025, 0.05].forEach(function(delay) {
-        const source = noise(0.05);
-        const gain = ctx.createGain();
+    [0, .025, .05].forEach(
+        function(delay) {
 
-        gain.gain.setValueAtTime(0.2, ctx.currentTime + delay);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + 0.06);
+            const source =
+            noise(.05);
 
-        source.connect(gain);
-        gain.connect(ctx.destination);
-        source.start(ctx.currentTime + delay);
-    });
+            const gain =
+            ctx.createGain();
+
+            gain.gain.setValueAtTime(
+                .2,
+                ctx.currentTime + delay
+            );
+
+            gain.gain.exponentialRampToValueAtTime(
+                .01,
+                ctx.currentTime +
+                delay + .06
+            );
+
+            source.connect(gain);
+
+            gain.connect(
+                ctx.destination
+            );
+
+            source.start(
+                ctx.currentTime + delay
+            );
+
+        }
+    );
+
 }
+
 
 /* TOM */
+
 function tom() {
+
     const ctx = getAudio();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+
+    const osc =
+    ctx.createOscillator();
+
+    const gain =
+    ctx.createGain();
 
     osc.type = "sine";
-    osc.frequency.setValueAtTime(140, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.25);
 
-    gain.gain.setValueAtTime(0.5, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+    osc.frequency.setValueAtTime(
+        140,
+        ctx.currentTime
+    );
+
+    osc.frequency.exponentialRampToValueAtTime(
+        70,
+        ctx.currentTime + .25
+    );
+
+    gain.gain.setValueAtTime(
+        .5,
+        ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        .01,
+        ctx.currentTime + .3
+    );
 
     osc.connect(gain);
+
     gain.connect(ctx.destination);
 
     osc.start();
-    osc.stop(ctx.currentTime + 0.3);
+
+    osc.stop(
+        ctx.currentTime + .3
+    );
+
 }
 
-/* BASS */
+
+/* MUSICAL BASS */
+
+const bassNotes = {
+
+    "C": 65.41,
+    "C#": 69.30,
+    "D": 73.42,
+    "D#": 77.78,
+    "E": 82.41,
+    "F": 87.31,
+    "F#": 92.50,
+    "G": 98.00,
+    "G#": 103.83,
+    "A": 110.00,
+    "A#": 116.54,
+    "B": 123.47
+
+};
+
+
 function bass() {
+
     const ctx = getAudio();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
 
-    osc.type = "sawtooth";
-    osc.frequency.value = 55;
+    const frequency =
+    bassNotes[
+        bassSelector.value
+    ];
 
-    gain.gain.setValueAtTime(0.25, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+    const osc1 =
+    ctx.createOscillator();
 
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+    const osc2 =
+    ctx.createOscillator();
 
-    osc.start();
-    osc.stop(ctx.currentTime + 0.35);
+    const gain =
+    ctx.createGain();
+
+    osc1.type = "sawtooth";
+
+    osc2.type = "sine";
+
+    osc1.frequency.value =
+    frequency;
+
+    osc2.frequency.value =
+    frequency / 2;
+
+    gain.gain.setValueAtTime(
+        .22,
+        ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        .01,
+        ctx.currentTime + .4
+    );
+
+    osc1.connect(gain);
+
+    osc2.connect(gain);
+
+    gain.connect(
+        ctx.destination
+    );
+
+    osc1.start();
+
+    osc2.start();
+
+    osc1.stop(
+        ctx.currentTime + .4
+    );
+
+    osc2.stop(
+        ctx.currentTime + .4
+    );
+
 }
 
-/* PIANO */
+
+/* WEST COAST INSPIRED KEYS */
+
 function playNote(freq) {
+
     const ctx = getAudio();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
 
-    osc.type = "square";
-    osc.frequency.value = freq;
+    const main =
+    ctx.createOscillator();
 
-    gain.gain.setValueAtTime(0.18, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+    const warm =
+    ctx.createOscillator();
 
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+    const bell =
+    ctx.createOscillator();
 
-    osc.start();
-    osc.stop(ctx.currentTime + 0.5);
+    const master =
+    ctx.createGain();
+
+
+    main.type = "sine";
+
+    warm.type = "triangle";
+
+    bell.type = "sine";
+
+
+    main.frequency.value =
+    freq;
+
+    warm.frequency.value =
+    freq;
+
+    bell.frequency.value =
+    freq * 2;
+
+
+    master.gain.setValueAtTime(
+        0.001,
+        ctx.currentTime
+    );
+
+    master.gain.exponentialRampToValueAtTime(
+        .22,
+        ctx.currentTime + .02
+    );
+
+    master.gain.exponentialRampToValueAtTime(
+        .12,
+        ctx.currentTime + .35
+    );
+
+    master.gain.exponentialRampToValueAtTime(
+        .001,
+        ctx.currentTime + 1.2
+    );
+
+
+    const mainGain =
+    ctx.createGain();
+
+    const warmGain =
+    ctx.createGain();
+
+    const bellGain =
+    ctx.createGain();
+
+
+    mainGain.gain.value =
+    .7;
+
+    warmGain.gain.value =
+    .25;
+
+    bellGain.gain.value =
+    .08;
+
+
+    main.connect(mainGain);
+
+    warm.connect(warmGain);
+
+    bell.connect(bellGain);
+
+
+    mainGain.connect(master);
+
+    warmGain.connect(master);
+
+    bellGain.connect(master);
+
+
+    master.connect(
+        ctx.destination
+    );
+
+
+    main.start();
+
+    warm.start();
+
+    bell.start();
+
+
+    main.stop(
+        ctx.currentTime + 1.25
+    );
+
+    warm.stop(
+        ctx.currentTime + 1.25
+    );
+
+    bell.stop(
+        ctx.currentTime + 1.25
+    );
+
 }
 
-pianoKeys.forEach(function(key) {
-    key.addEventListener("click", function() {
-        playNote(Number(key.dataset.note));
-        key.classList.add("pressed");
 
-        setTimeout(function() {
-            key.classList.remove("pressed");
-        }, 120);
-    });
-});
+/* PIANO CLICKS */
 
-function triggerInstrument(instrument) {
-    if (instrument === "kick") kick();
-    if (instrument === "snare") snare();
-    if (instrument === "hihat") hihat();
-    if (instrument === "clap") clap();
-    if (instrument === "tom") tom();
-    if (instrument === "bass") bass();
+pianoKeys.forEach(
+function(key) {
+
+    key.addEventListener(
+    "click",
+    function() {
+
+        playNote(
+            Number(
+                key.dataset.note
+            )
+        );
+
+        key.classList.add(
+            "pressed"
+        );
+
+        setTimeout(
+        function() {
+
+            key.classList.remove(
+                "pressed"
+            );
+
+        },
+        150
+        );
+
+    }
+    );
+
+}
+);
+
+
+/* DRUM BUTTONS */
+
+function triggerInstrument(
+instrument
+) {
+
+    if (
+        instrument === "kick"
+    ) kick();
+
+    if (
+        instrument === "snare"
+    ) snare();
+
+    if (
+        instrument === "hihat"
+    ) hihat();
+
+    if (
+        instrument === "clap"
+    ) clap();
+
+    if (
+        instrument === "tom"
+    ) tom();
+
+    if (
+        instrument === "bass"
+    ) bass();
+
 }
 
-cubes.forEach(function(cube) {
-    cube.addEventListener("click", function() {
-        const instrument = cube.dataset.instrument;
-        const step = Number(cube.dataset.step);
 
-        pattern[instrument][step] = !pattern[instrument][step];
-        cube.classList.toggle("active");
+cubes.forEach(
+function(cube) {
 
-        if (pattern[instrument][step]) {
-            triggerInstrument(instrument);
+    cube.addEventListener(
+    "click",
+    function() {
+
+        const instrument =
+        cube.dataset.instrument;
+
+        const step =
+        Number(
+            cube.dataset.step
+        );
+
+        pattern[instrument][step] =
+        !pattern[instrument][step];
+
+        cube.classList.toggle(
+            "active"
+        );
+
+        if (
+            pattern[instrument][step]
+        ) {
+
+            triggerInstrument(
+                instrument
+            );
+
         }
-    });
-});
+
+    }
+    );
+
+}
+);
+
+
+/* PLAY STEP */
 
 function playStep() {
 
-    cubes.forEach(function(cube) {
-        cube.classList.remove("playing");
-    });
+    cubes.forEach(
+    function(cube) {
 
-    document.querySelectorAll(`[data-step="${currentStep}"]`).forEach(function(cube) {
-        cube.classList.add("playing");
-    });
+        cube.classList.remove(
+            "playing"
+        );
 
-    Object.keys(pattern).forEach(function(instrument) {
-        if (pattern[instrument][currentStep]) {
-            triggerInstrument(instrument);
+    }
+    );
+
+
+    document
+    .querySelectorAll(
+        `[data-step="${currentStep}"]`
+    )
+    .forEach(
+    function(cube) {
+
+        cube.classList.add(
+            "playing"
+        );
+
+    }
+    );
+
+
+    Object.keys(pattern)
+    .forEach(
+    function(instrument) {
+
+        if (
+            pattern[instrument]
+            [currentStep]
+        ) {
+
+            triggerInstrument(
+                instrument
+            );
+
         }
-    });
 
-    currentStep = (currentStep + 1) % 8;
+    }
+    );
+
+
+    currentStep =
+    (currentStep + 1) % 8;
+
 }
+
+
+/* START */
 
 function startSequencer() {
-    const bpm = Number(bpmSlider.value);
-    const interval = (60 / bpm) * 500;
+
+    const bpm =
+    Number(
+        bpmSlider.value
+    );
+
+    const interval =
+    (60 / bpm) * 500;
 
     playStep();
-    timer = setInterval(playStep, interval);
+
+    timer =
+    setInterval(
+        playStep,
+        interval
+    );
+
 }
 
-playButton.addEventListener("click", function() {
+
+/* PLAY BUTTON */
+
+playButton.addEventListener(
+"click",
+function() {
 
     getAudio();
 
     if (!playing) {
+
         playing = true;
+
         currentStep = 0;
-        playButton.textContent = "■ STOP";
+
+        playButton.textContent =
+        "■ STOP";
+
         startSequencer();
-    } else {
-        playing = false;
-        clearInterval(timer);
-        timer = null;
-        playButton.textContent = "▶ PLAY";
 
-        cubes.forEach(function(cube) {
-            cube.classList.remove("playing");
-        });
     }
-});
 
-bpmSlider.addEventListener("input", function() {
-    bpmValue.textContent = bpmSlider.value;
+    else {
+
+        playing = false;
+
+        clearInterval(timer);
+
+        timer = null;
+
+        playButton.textContent =
+        "▶ PLAY";
+
+        cubes.forEach(
+        function(cube) {
+
+            cube.classList.remove(
+                "playing"
+            );
+
+        }
+        );
+
+    }
+
+}
+);
+
+
+/* BPM */
+
+bpmSlider.addEventListener(
+"input",
+function() {
+
+    bpmValue.textContent =
+    bpmSlider.value;
 
     if (playing) {
+
         clearInterval(timer);
+
         startSequencer();
+
     }
-});
+
+}
+);
+
 
 /* SAVE */
-saveButton.addEventListener("click", function() {
-    localStorage.setItem("8bitBeatMakerV5", JSON.stringify({
+
+saveButton.addEventListener(
+"click",
+function() {
+
+    const beat = {
+
         pattern: pattern,
-        bpm: bpmSlider.value
-    }));
 
-    saveButton.textContent = "✓ SAVED";
+        bpm:
+        bpmSlider.value,
 
-    setTimeout(function() {
-        saveButton.textContent = "💾 SAVE";
-    }, 1200);
-});
+        bassNote:
+        bassSelector.value
+
+    };
+
+
+    localStorage.setItem(
+        "8bitBeatMakerV6",
+        JSON.stringify(beat)
+    );
+
+
+    saveButton.textContent =
+    "✓ SAVED";
+
+
+    setTimeout(
+    function() {
+
+        saveButton.textContent =
+        "💾 SAVE";
+
+    },
+    1200
+    );
+
+}
+);
+
 
 /* LOAD */
-loadButton.addEventListener("click", function() {
 
-    const saved = localStorage.getItem("8bitBeatMakerV5");
+loadButton.addEventListener(
+"click",
+function() {
+
+    const saved =
+    localStorage.getItem(
+        "8bitBeatMakerV6"
+    );
+
 
     if (!saved) {
-        loadButton.textContent = "NO SAVE";
 
-        setTimeout(function() {
-            loadButton.textContent = "📂 LOAD";
-        }, 1200);
+        loadButton.textContent =
+        "NO SAVE";
+
+        setTimeout(
+        function() {
+
+            loadButton.textContent =
+            "📂 LOAD";
+
+        },
+        1200
+        );
 
         return;
+
     }
 
-    const beat = JSON.parse(saved);
 
-    Object.keys(pattern).forEach(function(instrument) {
-        if (beat.pattern[instrument]) {
-            pattern[instrument] = beat.pattern[instrument];
+    const beat =
+    JSON.parse(saved);
+
+
+    Object.keys(pattern)
+    .forEach(
+    function(instrument) {
+
+        if (
+            beat.pattern[instrument]
+        ) {
+
+            pattern[instrument] =
+            beat.pattern[instrument];
+
         }
-    });
 
-    bpmSlider.value = beat.bpm;
-    bpmValue.textContent = beat.bpm;
+    }
+    );
 
-    cubes.forEach(function(cube) {
-        const instrument = cube.dataset.instrument;
-        const step = Number(cube.dataset.step);
 
-        cube.classList.toggle("active", pattern[instrument][step]);
-    });
+    bpmSlider.value =
+    beat.bpm;
 
-    loadButton.textContent = "✓ LOADED";
+    bpmValue.textContent =
+    beat.bpm;
 
-    setTimeout(function() {
-        loadButton.textContent = "📂 LOAD";
-    }, 1200);
-});
+
+    if (beat.bassNote) {
+
+        bassSelector.value =
+        beat.bassNote;
+
+    }
+
+
+    cubes.forEach(
+    function(cube) {
+
+        const instrument =
+        cube.dataset.instrument;
+
+        const step =
+        Number(
+            cube.dataset.step
+        );
+
+        cube.classList.toggle(
+            "active",
+            pattern[instrument][step]
+        );
+
+    }
+    );
+
+
+    loadButton.textContent =
+    "✓ LOADED";
+
+
+    setTimeout(
+    function() {
+
+        loadButton.textContent =
+        "📂 LOAD";
+
+    },
+    1200
+    );
+
+}
+);
+
 
 /* CLEAR */
-clearButton.addEventListener("click", function() {
 
-    Object.keys(pattern).forEach(function(instrument) {
-        pattern[instrument].fill(false);
-    });
+clearButton.addEventListener(
+"click",
+function() {
 
-    cubes.forEach(function(cube) {
-        cube.classList.remove("active");
-    });
-});
+    Object.keys(pattern)
+    .forEach(
+    function(instrument) {
 
-/* COMPUTER KEYBOARD */
+        pattern[instrument]
+        .fill(false);
+
+    }
+    );
+
+
+    cubes.forEach(
+    function(cube) {
+
+        cube.classList.remove(
+            "active"
+        );
+
+    }
+    );
+
+}
+);
+
+
+/* KEYBOARD PIANO */
 
 const keyboardNotes = {
+
     a: 261.63,
     w: 277.18,
     s: 293.66,
@@ -663,53 +1490,131 @@ const keyboardNotes = {
     u: 466.16,
     j: 493.88,
     k: 523.25
+
 };
 
-const heldKeys = new Set();
 
-document.addEventListener("keydown", function(event) {
+const heldKeys =
+new Set();
 
-    const key = event.key.toLowerCase();
 
-    if (!(key in keyboardNotes)) return;
+document.addEventListener(
+"keydown",
+function(event) {
+
+    const key =
+    event.key.toLowerCase();
+
+
+    if (
+        !(key in keyboardNotes)
+    ) return;
+
 
     event.preventDefault();
 
-    if (event.repeat || heldKeys.has(key)) return;
+
+    if (
+        event.repeat ||
+        heldKeys.has(key)
+    ) return;
+
 
     heldKeys.add(key);
 
-    playNote(keyboardNotes[key]);
 
-    const pianoKey = Array.from(pianoKeys).find(function(element) {
-        return Number(element.dataset.note) === keyboardNotes[key];
-    });
+    playNote(
+        keyboardNotes[key]
+    );
 
-    if (pianoKey) pianoKey.classList.add("pressed");
-});
 
-document.addEventListener("keyup", function(event) {
+    const pianoKey =
+    Array.from(pianoKeys)
+    .find(
+    function(element) {
 
-    const key = event.key.toLowerCase();
+        return Number(
+            element.dataset.note
+        ) ===
+        keyboardNotes[key];
 
-    if (!(key in keyboardNotes)) return;
+    }
+    );
+
+
+    if (pianoKey) {
+
+        pianoKey.classList.add(
+            "pressed"
+        );
+
+    }
+
+}
+);
+
+
+document.addEventListener(
+"keyup",
+function(event) {
+
+    const key =
+    event.key.toLowerCase();
+
+
+    if (
+        !(key in keyboardNotes)
+    ) return;
+
 
     heldKeys.delete(key);
 
-    const pianoKey = Array.from(pianoKeys).find(function(element) {
-        return Number(element.dataset.note) === keyboardNotes[key];
-    });
 
-    if (pianoKey) pianoKey.classList.remove("pressed");
-});
+    const pianoKey =
+    Array.from(pianoKeys)
+    .find(
+    function(element) {
 
-window.addEventListener("blur", function() {
+        return Number(
+            element.dataset.note
+        ) ===
+        keyboardNotes[key];
+
+    }
+    );
+
+
+    if (pianoKey) {
+
+        pianoKey.classList.remove(
+            "pressed"
+        );
+
+    }
+
+}
+);
+
+
+window.addEventListener(
+"blur",
+function() {
+
     heldKeys.clear();
 
-    pianoKeys.forEach(function(key) {
-        key.classList.remove("pressed");
-    });
-});
+
+    pianoKeys.forEach(
+    function(key) {
+
+        key.classList.remove(
+            "pressed"
+        );
+
+    }
+    );
+
+}
+);
 
 </script>
 
